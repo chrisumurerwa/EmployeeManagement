@@ -1,5 +1,6 @@
 package org.example.employee_management.Repository;
 
+
 import org.example.employee_management.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
