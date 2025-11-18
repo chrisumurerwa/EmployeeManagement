@@ -1,12 +1,11 @@
 package org.example.employee_management.Service;
 
-
-
+import jakarta.validation.Valid;
 import org.example.employee_management.Dto.AuthResponse;
 import org.example.employee_management.Dto.LoginRequest;
 import org.example.employee_management.Dto.RegisterRequest;
 import org.example.employee_management.Models.Role;
-import org.example.employee_management. Models.User;
+import org.example.employee_management.Models.User;
 import org.example.employee_management.Repository.UserRepository;
 import org.example.employee_management.Security.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -80,5 +79,47 @@ public class UserService {
                 .role(user.getRole().name())
                 .build();
     }
-}
 
+    // Register user as ADMIN
+    @Transactional
+    public AuthResponse registerAdmin(@Valid RegisterRequest req) {
+        return registerUser(req, Role.ROLE_ADMIN);
+    }
+
+    // Register user as EMPLOYEE/USER
+    @Transactional
+    public AuthResponse registerEmployee(@Valid RegisterRequest req) {
+        return registerUser(req, Role.ROLE_USER);
+    }
+
+    // Check if any admin exists in the system
+    public boolean adminExists() {
+        return userRepository.existsByRole(Role.ROLE_ADMIN);
+    }
+
+    // Private helper method to avoid code duplication
+    private AuthResponse registerUser(RegisterRequest req, Role role) {
+        if (userRepository.existsByUsername(req.getUsername())) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+        if (userRepository.existsByEmail(req.getEmail())) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+
+        User user = User.builder()
+                .username(req.getUsername())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .role(role)
+                .build();
+
+        User saved = userRepository.save(user);
+        String token = jwtUtils.generateToken(saved.getUsername(), saved.getRole().name());
+
+        return AuthResponse.builder()
+                .token(token)
+                .username(saved.getUsername())
+                .role(saved.getRole().name())
+                .build();
+    }
+}

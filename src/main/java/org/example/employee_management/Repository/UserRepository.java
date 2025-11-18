@@ -1,11 +1,13 @@
 package org.example.employee_management.Repository;
 
-
+import org.example.employee_management.Models.Role;
 import org.example.employee_management.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     // Find user by username or email for authentication
@@ -16,4 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Check if username or email already exists (for validation)
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+
+    // Check if any user with specific role exists
+    boolean existsByRole(Role role);
 }
