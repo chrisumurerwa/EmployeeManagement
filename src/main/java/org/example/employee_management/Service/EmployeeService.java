@@ -19,7 +19,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    // ✅ CORRECTED: Convert EmployeeRequest to Employee entity before saving
+    //  CORRECTED: Convert EmployeeRequest to Employee entity before saving
     public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
         // Convert EmployeeRequest DTO to Employee entity
         Employee employee = new Employee();
@@ -35,7 +35,7 @@ public class EmployeeService {
         return convertToResponse(savedEmployee);
     }
 
-    // ✅ CORRECTED: Return List<EmployeeResponse> instead of List<Employee>
+    //  CORRECTED: Return List<EmployeeResponse> instead of List<Employee>
     public List<EmployeeResponse> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream()
@@ -43,14 +43,15 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ CORRECTED: Return EmployeeResponse instead of Employee
+    //  CORRECTED: Return EmployeeResponse instead of Employee
     public EmployeeResponse getEmployeeById(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
         return convertToResponse(employee);
     }
 
-    // ✅ CORRECTED: Return EmployeeResponse instead of Employee
+    //
+    //  CORRECTED: Return EmployeeResponse instead of Employee
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest updatedEmployee) {
         Employee existingEmployee = getEmployeeByIdEntity(id); // Use a separate method to get the entity
 
