@@ -24,7 +24,7 @@ public class EmployeeResponse {
 
     private LocalDate hireDate;
 
-    private Long manager_id;
+
     // Manager information (optional)
 
 

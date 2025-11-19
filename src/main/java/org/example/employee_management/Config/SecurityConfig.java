@@ -19,19 +19,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-
 public class SecurityConfig {
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // SWAGGER PERMISSIONS
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/index.html"
+                        ).permitAll()
+
+                        // Authentication API
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Allow GET for both USER and ADMIN
+                        // GET for authenticated users
                         .requestMatchers(HttpMethod.GET, "/api/employees/**")
                         .authenticated()
 
@@ -43,17 +53,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/employees/**")
                         .hasRole("ADMIN")
 
-                        // Everything else needs authentication
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
+                // Stateless session
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                // Add JWT filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

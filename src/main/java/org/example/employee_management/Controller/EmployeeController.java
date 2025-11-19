@@ -1,12 +1,11 @@
 package org.example.employee_management.Controller;
 
-import org.example.employee_management.Models.Employee;
+import org.example.employee_management.Dto.EmployeeRequest;
+import org.example.employee_management.Dto.EmployeeResponse;
 import org.example.employee_management.Service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employees")
 @Validated
-
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -30,35 +28,33 @@ public class EmployeeController {
         return "test successful";
     }
 
-
-
-
-    //  ONLY ADMIN CAN CREATE EMPLOYEE
+    // ONLY ADMIN CAN CREATE EMPLOYEE - Using DTO instead of Entity
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
-        Employee created = employeeService.createEmployee(employee);
+    public ResponseEntity<EmployeeResponse> createEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) {
+        EmployeeResponse created = employeeService.createEmployee(employeeRequest);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    // ANY AUTHENTICATED USER CAN VIEW
+    //  FIXED: Changed from List<Employee> to List<EmployeeResponse>
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
+    //  FIXED: Changed from Employee to EmployeeResponse
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
-    //  Updating is not restricted (if you want, we can restrict it)
+    //  FIXED: Changed from Employee to EmployeeResponse
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employee) {
-        return ResponseEntity.ok(employeeService.updateEmployee(id, employee));
+    public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeRequest employeeRequest) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, employeeRequest));
     }
 
-    //  ONLY ADMIN CAN DELETE EMPLOYEE
+    // ONLY ADMIN CAN DELETE EMPLOYEE
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
