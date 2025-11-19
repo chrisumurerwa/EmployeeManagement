@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.employee_management.Models.User;
 
 import java.time.LocalDate;
 
@@ -26,5 +27,7 @@ public class EmployeeRequest {
     @NotNull(message = "Hire date is required")
     private LocalDate hireDate;
 
-  // Optional: ID of the manager (User)
+
+
+    // Optional: ID of the manager (User)
 }
