@@ -16,7 +16,7 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
 # Copy the built JAR from build stage
-COPY --from=build /app/target/employee_management-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/Employee_Management-0.0.1-SNAPSHOT.jar app.jar
 
 # Render expects the app to listen on the PORT environment variable
 # Default to 8082 if PORT is not set
