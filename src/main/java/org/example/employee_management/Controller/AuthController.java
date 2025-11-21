@@ -1,5 +1,6 @@
 package org.example.employee_management.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.employee_management.Dto.AuthResponse;
 import org.example.employee_management.Dto.LoginRequest;
 import org.example.employee_management.Dto.RegisterRequest;
@@ -22,20 +23,16 @@ public class AuthController {
     }
 
 
-
+@Operation(summary = "Register User", description = "Register User")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest req) {
         AuthResponse response = userService.registerEmployee(req);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/register-admin")
-    public ResponseEntity<AuthResponse> registerAdmin(@Valid @RequestBody RegisterRequest req) {
-        AuthResponse response = userService.registerAdmin(req);
-        return ResponseEntity.ok(response);
-    }
 
 
+@Operation(summary = "Login by User and Admin", description = "Login  by user and Admin")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest req) {
         AuthResponse response = userService.login(req);
