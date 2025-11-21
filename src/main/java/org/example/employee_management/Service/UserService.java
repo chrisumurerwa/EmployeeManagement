@@ -59,8 +59,8 @@ public class UserService {
 
         return AuthResponse.builder()
                 .token(token)
-                .username(saved.getUsername())
-                .role(saved.getRole().name())
+//                .username(saved.getUsername())
+//                .role(saved.getRole().name())
                 .build();
     }
 
